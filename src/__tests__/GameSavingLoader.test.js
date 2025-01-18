@@ -13,7 +13,7 @@ test('Testing resolve', async () => {
   for (let i = 0; i < data.length; i++) {
     bufferView[i] = data.charCodeAt(i);
   }
-  read.mockResolvedValue(buffer);
+  read.mockResolvedValue(bufferView);
   GameSavingLoader.load().then((obj) => {
     expect(obj).toEqual(
       {
@@ -27,11 +27,9 @@ test('Testing resolve', async () => {
   });
 });
 
+  
+
 test('Testing reject', async () => {
   read.mockResolvedValue(new ArrayBuffer(0));
-  try {
-    const result = await GameSavingLoader.load();
-  } catch (err) {
-    expect(err.message).toEqual('Wrong string format!');
-  }
+  await expect(GameSavingLoader.load()).rejects.toThrow('Wrong string format!');
 });
